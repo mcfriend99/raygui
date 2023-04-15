@@ -60,7 +60,7 @@ jobs:
         mkdir -p $GITHUB_WORKSPACE/tmp
         cmake -E env CFLAGS="-target x86_64-apple-macos10.12" \
           LDFLAGS="-target x86_64-apple-macos10.12" \
-          cmake $GITHUB_WORKSPACE/tmp -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop \
+          cmake -B $GITHUB_WORKSPACE/tmp -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop \
           -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${{github.workspace}}/x86_64/lib \
           -DGL_SILENCE_DEPRECATION=1
         cmake --build $GITHUB_WORKSPACE/tmp --config $BUILD_TYPE
@@ -69,7 +69,7 @@ jobs:
         # Build raylib arm64 dynamic
         cmake -E env CFLAGS="-target arm64-apple-macos11" \
           LDFLAGS="-target arm64-apple-macos11" \
-          cmake $GITHUB_WORKSPACE/tmp -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop \
+          cmake -B $GITHUB_WORKSPACE/tmp -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop \
           -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${{github.workspace}}/arm64/lib \
           -DGL_SILENCE_DEPRECATION=1
         cmake --build $GITHUB_WORKSPACE/tmp --config $BUILD_TYPE

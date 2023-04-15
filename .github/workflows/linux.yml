@@ -60,10 +60,12 @@ jobs:
     - name: Build Library
       working-directory: ${{github.workspace}}/build
       run: |
-        cmake -E env CFLAGS="-fPIC" cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${{github.workspace}}/build/lib/${{ env.RELEASE_NAME }}
+        cmake -E env CFLAGS="-fPIC -Wno-unused-result -Wno-stringop-overflow -Wno-alloc-size-larger-than" \
+          cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop \
+          -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${{github.workspace}}/build/lib/${{ env.RELEASE_NAME }}
         cmake --build . --config $BUILD_TYPE
         
-        ls -al build/lib/${{ env.RELEASE_NAME }}
+        ls -al ${{github.workspace}}/build/lib/${{ env.RELEASE_NAME }}
     
     - name: Generate Artifacts
       run: |

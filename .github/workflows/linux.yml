@@ -62,15 +62,17 @@ jobs:
       run: |
         cmake -E env CFLAGS="-fPIC" cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${{github.workspace}}/build/lib/${{ env.RELEASE_NAME }}
         cmake --build . --config $BUILD_TYPE
+        
+        ls -al build/lib/${{ env.RELEASE_NAME }}
     
     - name: Generate Artifacts
       run: |
-        cp -v ./src/raylib.h ./build/${{ env.RELEASE_NAME }}/include
-        cp -v ./src/raymath.h ./build/${{ env.RELEASE_NAME }}/include
-        cp -v ./src/rlgl.h ./build/${{ env.RELEASE_NAME }}/include
-        cp -v ./CHANGELOG ./build/${{ env.RELEASE_NAME }}/CHANGELOG
-        cp -v ./README.md ./build/${{ env.RELEASE_NAME }}/README.md
-        cp -v ./LICENSE ./build/${{ env.RELEASE_NAME }}/LICENSE
+        cp -v ./raylib/src/raylib.h ./build/${{ env.RELEASE_NAME }}/include
+        cp -v ./raylib/src/raymath.h ./build/${{ env.RELEASE_NAME }}/include
+        cp -v ./raylib/src/rlgl.h ./build/${{ env.RELEASE_NAME }}/include
+        cp -v ./raylib/CHANGELOG ./build/${{ env.RELEASE_NAME }}/CHANGELOG
+        cp -v ./raylib/README.md ./build/${{ env.RELEASE_NAME }}/README.md
+        cp -v ./raylib/LICENSE ./build/${{ env.RELEASE_NAME }}/LICENSE
         cd build
         tar -czvf ${{ env.RELEASE_NAME }}.tar.gz ${{ env.RELEASE_NAME }}
         

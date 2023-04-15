@@ -72,19 +72,22 @@ jobs:
           -DGL_SILENCE_DEPRECATION=1
         cmake --build . --config $BUILD_TYPE
         
+        ls -al ${{github.workspace}}/x86_64/lib
+        ls -al ${{github.workspace}}/arm64/lib
+        
         # Join x86_64 and arm64 dynamic
-        lipo -create -output ./build/lib/${{ env.RELEASE_NAME }}/libraylib.${RAYLIB_VERSION}.dylib ./x86_64/lib/libraylibgui.dylib ./arm64/lib/libraylibgui.dylib
-        #ln -sv libraylibgui.${RAYLIB_VERSION}.dylib  ./build/${{ env.RELEASE_NAME }}/lib/libraylibgui.dylib
-        #ln -sv libraylibgui.${RAYLIB_VERSION}.dylib  ./build/${{ env.RELEASE_NAME }}/lib/libraylibgui.${RAYLIB_API_VERSION}.dylib
+        lipo -create -output ./build/lib/${{ env.RELEASE_NAME }}/libraygui.${RAYLIB_VERSION}.dylib ${{github.workspace}}/x86_64/lib/libraygui.dylib ${{github.workspace}}/arm64/lib/libraygui.dylib
+        #ln -sv libraygui.${RAYLIB_VERSION}.dylib  ./build/${{ env.RELEASE_NAME }}/lib/libraylibgui.dylib
+        #ln -sv libraygui.${RAYLIB_VERSION}.dylib  ./build/${{ env.RELEASE_NAME }}/lib/libraylibgui.${RAYLIB_API_VERSION}.dylib
   
     - name: Generate Artifacts
       run: |
-        cp -v ./src/raylib.h ./build/${{ env.RELEASE_NAME }}/include
-        cp -v ./src/raymath.h ./build/${{ env.RELEASE_NAME }}/include
-        cp -v ./src/rlgl.h ./build/${{ env.RELEASE_NAME }}/include
-        cp -v ./CHANGELOG ./build/${{ env.RELEASE_NAME }}/CHANGELOG
-        cp -v ./README.md ./build/${{ env.RELEASE_NAME }}/README.md
-        cp -v ./LICENSE ./build/${{ env.RELEASE_NAME }}/LICENSE
+        cp -v ./raylib/src/raylib.h ./build/${{ env.RELEASE_NAME }}/include
+        cp -v ./raylib/src/raymath.h ./build/${{ env.RELEASE_NAME }}/include
+        cp -v ./raylib/src/rlgl.h ./build/${{ env.RELEASE_NAME }}/include
+        cp -v ./raylib/CHANGELOG ./build/${{ env.RELEASE_NAME }}/CHANGELOG
+        cp -v ./raylib/README.md ./build/${{ env.RELEASE_NAME }}/README.md
+        cp -v ./raylib/LICENSE ./build/${{ env.RELEASE_NAME }}/LICENSE
         cd build
         tar -czvf ${{ env.RELEASE_NAME }}.tar.gz ${{ env.RELEASE_NAME }}
         

@@ -56,7 +56,7 @@ jobs:
         RAYLIB_VERSION=`ggrep -Po 'RAYLIB_VERSION\s*=\s\K(.*)' ../raylib/src/Makefile`
         
         # Generate make files
-        cmake -B .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DGL_SILENCE_DEPRECATION=1
+        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DGL_SILENCE_DEPRECATION=1
         
         # Build raylib x86_64 dynamic
         cmake -E env CFLAGS="-target x86_64-apple-macos10.12" \

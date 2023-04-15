@@ -70,7 +70,6 @@ jobs:
         ls -al ${{github.workspace}}/build/lib/${{ env.RELEASE_NAME }}
     
     - name: Generate Artifacts
-      working-directory: ${{github.workspace}}/build
       run: |
         cp -v ./raylib/src/raylib.h ./build/${{ env.RELEASE_NAME }}/include
         cp -v ./raylib/src/raymath.h ./build/${{ env.RELEASE_NAME }}/include

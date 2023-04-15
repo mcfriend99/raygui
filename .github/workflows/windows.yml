@@ -38,7 +38,7 @@ jobs:
           VSARCHPATH: "x64"
 
     env:
-      RELEASE_NAME: raylib-dev_win${{ matrix.bits }}_${{ matrix.compiler }}
+      RELEASE_NAME: raygui-dev_win${{ matrix.bits }}_${{ matrix.compiler }}
       GNUTARGET: default
 
     steps:
@@ -47,7 +47,7 @@ jobs:
     
     - name: Setup Release Version
       run: |
-        echo "RELEASE_NAME=raylib-${{ github.event.release.tag_name }}_win${{ matrix.bits }}_${{ matrix.compiler }}" >> $GITHUB_ENV
+        echo "RELEASE_NAME=raygui-${{ github.event.release.tag_name }}_win${{ matrix.bits }}_${{ matrix.compiler }}" >> $GITHUB_ENV
       shell: bash
       if: github.event_name == 'release' && github.event.action == 'published'
 

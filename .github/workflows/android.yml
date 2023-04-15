@@ -50,14 +50,10 @@ jobs:
         ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
 
     - name: Setup Environment
-      run: | 
-        mkdir build
-        cd build
-        mkdir ${{ env.RELEASE_NAME }}
-        cd ${{ env.RELEASE_NAME }}
-        mkdir include
-        mkdir lib
-        cd ../..
+      run: |
+        mkdir -p build/include
+        mkdir -p build/${{ env.RELEASE_NAME }}/lib
+        mkdir -p tmp
    
     # Generating static + shared library for 64bit arquitectures and API version 29
     - name: Build Library

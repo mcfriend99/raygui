@@ -37,7 +37,7 @@ jobs:
           COMPILER_PATH: "/user/bin"
           
     env:
-      RELEASE_NAME: raylib-dev_linux_${{ matrix.ARCH_NAME }}
+      RELEASE_NAME: raylibgui-dev_linux_${{ matrix.ARCH_NAME }}
     
     steps:
     - name: Checkout code
@@ -45,7 +45,7 @@ jobs:
     
     - name: Setup Release Version
       run: |
-        echo "RELEASE_NAME=raylib-${{ github.event.release.tag_name }}_linux_${{ matrix.ARCH_NAME }}" >> $GITHUB_ENV
+        echo "RELEASE_NAME=raylibgui-${{ github.event.release.tag_name }}_linux_${{ matrix.ARCH_NAME }}" >> $GITHUB_ENV
       shell: bash
       if: github.event_name == 'release' && github.event.action == 'published'
       
@@ -55,14 +55,12 @@ jobs:
         sudo apt-get install gcc-multilib
         sudo apt-get install -y --no-install-recommends libglfw3 libglfw3-dev libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev libxext-dev libxfixes-dev
         mkdir -p build/${{ env.RELEASE_NAME }}/include
-        mkdir -p build/${{ env.RELEASE_NAME }}/32/lib
-        mkdir -p build/${{ env.RELEASE_NAME }}/64/lib
+        mkdir -p build/lib/${{ env.RELEASE_NAME }}
 
-    # TODO: Support 32bit (i386) static/shared library building
     - name: Build Library
       working-directory: ${{github.workspace}}/build
       run: |
-        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${{github.workspace}}/build/${{ env.RELEASE_NAME }}/${{ matrix.bits }}/lib
+        cmake -E env CFLAGS="-fPIC" cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${{github.workspace}}/build/lib/${{ env.RELEASE_NAME }}
         cmake --build . --config $BUILD_TYPE
     
     - name: Generate Artifacts

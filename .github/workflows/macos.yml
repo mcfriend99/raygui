@@ -23,7 +23,7 @@ jobs:
     runs-on: macos-latest
     
     env:
-      RELEASE_NAME: raylib-dev_macos
+      RELEASE_NAME: raylibgui-dev_macos
     
     steps:
     - name: Checkout
@@ -31,14 +31,14 @@ jobs:
     
     - name: Setup Release Version
       run: |
-        echo "RELEASE_NAME=raylib-${{ github.event.release.tag_name }}_macos" >> $GITHUB_ENV
+        echo "RELEASE_NAME=raylibgui-${{ github.event.release.tag_name }}_macos" >> $GITHUB_ENV
       shell: bash
       if: github.event_name == 'release' && github.event.action == 'published'
 
     - name: Setup Environment
       run: |
         mkdir -p build/${{ env.RELEASE_NAME }}/include
-        mkdir -p build/${{ env.RELEASE_NAME }}/lib
+        mkdir -p build/lib/${{ env.RELEASE_NAME }}
         mkdir -p x86_64/lib
         mkdir -p arm64/lib
 
@@ -73,9 +73,9 @@ jobs:
         cmake --build . --config $BUILD_TYPE
         
         # Join x86_64 and arm64 dynamic
-        lipo -create -output ./build/${{ env.RELEASE_NAME }}/lib/libraylib.${RAYLIB_VERSION}.dylib ./x86_64/lib/libraylib.dylib ./arm64/lib/libraylib.dylib
-        #ln -sv libraylib.${RAYLIB_VERSION}.dylib  ./build/${{ env.RELEASE_NAME }}/lib/libraylib.dylib
-        #ln -sv libraylib.${RAYLIB_VERSION}.dylib  ./build/${{ env.RELEASE_NAME }}/lib/libraylib.${RAYLIB_API_VERSION}.dylib
+        lipo -create -output ./build/lib/${{ env.RELEASE_NAME }}/libraylib.${RAYLIB_VERSION}.dylib ./x86_64/lib/libraylibgui.dylib ./arm64/lib/libraylibgui.dylib
+        #ln -sv libraylibgui.${RAYLIB_VERSION}.dylib  ./build/${{ env.RELEASE_NAME }}/lib/libraylibgui.dylib
+        #ln -sv libraylibgui.${RAYLIB_VERSION}.dylib  ./build/${{ env.RELEASE_NAME }}/lib/libraylibgui.${RAYLIB_API_VERSION}.dylib
   
     - name: Generate Artifacts
       run: |

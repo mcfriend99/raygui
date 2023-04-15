@@ -38,9 +38,7 @@ jobs:
     - name: Setup Environment
       run: |
         mkdir -p build/${{ env.RELEASE_NAME }}/include
-        mkdir -p build/lib
-        mkdir -p x86_64/lib
-        mkdir -p arm64/lib
+        mkdir -p build/${{ env.RELEASE_NAME }}/lib
         mkdir -p tmp
         brew install grep
 

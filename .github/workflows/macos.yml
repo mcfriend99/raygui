@@ -67,6 +67,7 @@ jobs:
         rm -rf $GITHUB_WORKSPACE/tmp
         
         # Build raylib arm64 dynamic
+        mkdir -p $GITHUB_WORKSPACE/tmp
         cmake -E env CFLAGS="-target arm64-apple-macos11" \
           LDFLAGS="-target arm64-apple-macos11" \
           cmake -B $GITHUB_WORKSPACE/tmp -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop \

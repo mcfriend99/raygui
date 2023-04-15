@@ -41,6 +41,7 @@ jobs:
         mkdir -p build/lib/${{ env.RELEASE_NAME }}
         mkdir -p x86_64/lib
         mkdir -p arm64/lib
+        mkdir -p tmp
         brew install grep
 
     # Generating static + shared library, note that i386 architecture is deprecated

@@ -56,6 +56,7 @@ jobs:
         sudo apt-get install -y --no-install-recommends libglfw3 libglfw3-dev libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev libxext-dev libxfixes-dev
         mkdir -p build/${{ env.RELEASE_NAME }}/include
         mkdir -p build/lib/${{ env.RELEASE_NAME }}
+        mkdir -p tmp
 
     - name: Build Library
       working-directory: ${{github.workspace}}/tmp

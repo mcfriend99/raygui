@@ -67,14 +67,10 @@ jobs:
           -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE=../build/${{ env.RELEASE_NAME }}/lib
         cmake --build . --config $BUILD_TYPE
         
-        ls -al ../build
-        ls -al ../build/lib
-        
         cd ..
     
     - name: Generate Artifacts
       run: |
-        ls -al ./build/
         cp -v ./raylib/src/raylib.h ./build/${{ env.RELEASE_NAME }}/include
         cp -v ./raylib/src/raymath.h ./build/${{ env.RELEASE_NAME }}/include
         cp -v ./raylib/src/rlgl.h ./build/${{ env.RELEASE_NAME }}/include

@@ -72,14 +72,10 @@ jobs:
         #ln -sv libraygui.${RAYLIB_VERSION}.dylib  ../build/${{ env.RELEASE_NAME }}/lib/libraygui.dylib
         #ln -sv libraygui.${RAYLIB_VERSION}.dylib  ../build/${{ env.RELEASE_NAME }}/lib/libraygui.${RAYLIB_API_VERSION}.dylib
         
-        ls -al ../build
-        ls -al ../build/lib
-        
         cd ..
 
     - name: Generate Artifacts
       run: |
-        ls -al ./build/
         cp -v ./raylib/src/raylib.h ./build/${{ env.RELEASE_NAME }}/include
         cp -v ./raylib/src/raymath.h ./build/${{ env.RELEASE_NAME }}/include
         cp -v ./raylib/src/rlgl.h ./build/${{ env.RELEASE_NAME }}/include

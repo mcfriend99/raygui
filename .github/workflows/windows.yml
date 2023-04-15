@@ -25,10 +25,6 @@ jobs:
         bits: [32, 64]
         include:
         - compiler: mingw-w64
-          bits: 32
-          ARCH: "i686"
-          WINDRES_ARCH: pe-i386
-        - compiler: mingw-w64
           bits: 64
           ARCH: "x86_64"
           WINDRES_ARCH: pe-x86-64
@@ -82,36 +78,21 @@ jobs:
         add_to_path: true
         tag: 12.2.0-15.0.6-10.0.0-msvcrt-r3
       if: matrix.compiler == 'mingw-w64'
-
-    - name: Build Library (MinGW-w64 32bit)
-      run: |
-        cd tmp
-        cmake .. -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DCMAKE_C_FLAGS="-m32" -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}/lib" -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
-        cmake --build . --config $BUILD_TYPE
-        cd ..
-      shell: cmd
-      if: |
-        matrix.compiler == 'mingw-w64' &&
-        matrix.bits == 32
         
     - name: Build Library (MinGW-w64 64bit)
       run: |
         cd tmp
-        cmake -B .. -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}/lib" -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
+        cmake .. -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
         cmake --build . --config $BUILD_TYPE
         cd ..
-      shell: cmd
-      if: |
-        matrix.compiler == 'mingw-w64' &&
-        matrix.bits == 64
+      if: matrix.compiler == 'mingw-w64'
 
     - name: Build Library (MSVC16)
       run: |
         cd tmp
-        cmake -B .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}/lib" -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
+        cmake .. -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
         cmake --build . --config $BUILD_TYPE
         cd ..
-      shell: cmd
       if: matrix.compiler == 'msvc16'
 
     - name: Generate Artifacts

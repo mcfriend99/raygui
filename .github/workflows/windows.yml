@@ -78,31 +78,35 @@ jobs:
         add_to_path: true
         tag: 12.2.0-15.0.6-10.0.0-msvcrt-r3
       if: matrix.compiler == 'mingw-w64'
-        
+
     - name: Build Library (MinGW-w64 64bit)
       run: |
         cd tmp
+        windres.exe --version
+        windres.exe -i ..\raylib\src\raylib.dll.rc -o ..\raylib\src\raylib.dll.rc.data -O coff --target=${{ matrix.WINDRES_ARCH }}
         cmake .. -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
-        cmake --build . --config $BUILD_TYPE
+        cmake --build .
         cd ..
       if: matrix.compiler == 'mingw-w64'
 
     - name: Build Library (MSVC16)
       run: |
         cd tmp
+        windres.exe --version
+        windres.exe -i ..\raylib\src\raylib.dll.rc -o ..\raylib\src\raylib.dll.rc.data -O coff --target=${{ matrix.WINDRES_ARCH }}
         cmake .. -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
-        cmake --build . --config $BUILD_TYPE
+        cmake --build .
         cd ..
       if: matrix.compiler == 'msvc16'
 
     - name: Generate Artifacts
       run: |
-        copy /Y .\src\raylib.h .\build\${{ env.RELEASE_NAME }}\include\raylib.h
-        copy /Y .\src\raymath.h .\build\${{ env.RELEASE_NAME }}\include\raymath.h
-        copy /Y .\src\rlgl.h .\build\${{ env.RELEASE_NAME }}\include\rlgl.h
-        copy /Y .\CHANGELOG .\build\${{ env.RELEASE_NAME }}\CHANGELOG
-        copy /Y .\README.md .\build\${{ env.RELEASE_NAME }}\README.md
-        copy /Y .\LICENSE .\build\${{ env.RELEASE_NAME }}\LICENSE
+        copy /Y .\raylib\src\raylib.h .\build\${{ env.RELEASE_NAME }}\include\raylib.h
+        copy /Y .\raylib\src\raymath.h .\build\${{ env.RELEASE_NAME }}\include\raymath.h
+        copy /Y .\raylib\src\rlgl.h .\build\${{ env.RELEASE_NAME }}\include\rlgl.h
+        copy /Y .\raylib\CHANGELOG .\build\${{ env.RELEASE_NAME }}\CHANGELOG
+        copy /Y .\raylib\README.md .\build\${{ env.RELEASE_NAME }}\README.md
+        copy /Y .\raylib\LICENSE .\build\${{ env.RELEASE_NAME }}\LICENSE
         cd build
         7z a ./${{ env.RELEASE_NAME }}.zip ./${{ env.RELEASE_NAME }}
         dir

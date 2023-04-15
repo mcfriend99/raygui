@@ -12,6 +12,10 @@ on:
 permissions:
   contents: read
 
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
 jobs:
   build:
     permissions:
@@ -57,7 +61,7 @@ jobs:
           LDFLAGS="-target x86_64-apple-macos10.12" \
           cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop \
           -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${{github.workspace}}/x86_64/lib \
-          -DGL_SILENCE_DEPRECATION
+          -DGL_SILENCE_DEPRECATION=1
         cmake --build . --config $BUILD_TYPE
         
         # Build raylib arm64 dynamic
@@ -65,7 +69,7 @@ jobs:
           LDFLAGS="-target arm64-apple-macos11" \
           cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop \
           -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${{github.workspace}}/arm64/lib \
-          -DGL_SILENCE_DEPRECATION
+          -DGL_SILENCE_DEPRECATION=1
         cmake --build . --config $BUILD_TYPE
         
         # Join x86_64 and arm64 dynamic

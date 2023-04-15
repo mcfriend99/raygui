@@ -59,27 +59,34 @@ jobs:
       run: | 
         dir
         mkdir build
+        mkdir tmp
         cd build
         mkdir ${{ env.RELEASE_NAME }}
         cd ${{ env.RELEASE_NAME }}
         mkdir include
         mkdir lib
-        cd ../../../raylib
+        cd ../../
 
     # Setup MSBuild.exe path if required
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.1
       if: matrix.compiler == 'msvc16'
 
+    - name: Setup cmake
+      uses: jwlawson/actions-setup-cmake@v1.9
+      with:
+        cmake-version: '3.18.x'
+    - name: Setup WinLibs
+      uses: bwoodsend/setup-winlibs-action@v1.8
+      with:
+        add_to_path: true
+        tag: 12.2.0-15.0.6-10.0.0-msvcrt-r3
+
     - name: Build Library (MinGW-w64 32bit)
       run: |
-        cd src
-        x86_64-w64-mingw32-gcc.exe --version
-        windres.exe --version
-        dir C:\msys64\mingw64\bin
-        make PLATFORM=PLATFORM_DESKTOP CC=x86_64-w64-mingw32-gcc.exe RAYLIB_LIBTYPE=STATIC RAYLIB_RELEASE_PATH="../build/${{ env.RELEASE_NAME }}/lib" CUSTOM_CFLAGS=-m32
-        //windres.exe -i raylib.dll.rc -o raylib.dll.rc.data -O coff --target=${{ matrix.WINDRES_ARCH }}
-        //make PLATFORM=PLATFORM_DESKTOP CC=${{ matrix.ARCH }}-w64-mingw32-gcc.exe RAYLIB_LIBTYPE=SHARED RAYLIB_RELEASE_PATH="../build/${{ env.RELEASE_NAME }}/lib" -B
+        cd tmp
+        cmake -B .. -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DCMAKE_C_FLAGS="-m32" -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}/lib" -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
+        cmake --build . --config $BUILD_TYPE
         cd ..
       shell: cmd
       if: |
@@ -88,13 +95,10 @@ jobs:
         
     - name: Build Library (MinGW-w64 64bit)
       run: |
-        cd src
-        ${{ matrix.ARCH }}-w64-mingw32-gcc.exe --version
-        windres.exe --version
-        dir C:\msys64\mingw64\bin
-        make PLATFORM=PLATFORM_DESKTOP CC=${{ matrix.ARCH }}-w64-mingw32-gcc.exe RAYLIB_LIBTYPE=STATIC RAYLIB_RELEASE_PATH="../build/${{ env.RELEASE_NAME }}/lib"
+        cd tmp
         windres.exe -i raylib.dll.rc -o raylib.dll.rc.data -O coff --target=${{ matrix.WINDRES_ARCH }}
-        make PLATFORM=PLATFORM_DESKTOP CC=${{ matrix.ARCH }}-w64-mingw32-gcc.exe RAYLIB_LIBTYPE=SHARED RAYLIB_RELEASE_PATH="../build/${{ env.RELEASE_NAME }}/lib" -B
+        cmake -B .. -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}/lib" -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
+        cmake --build . --config $BUILD_TYPE
         cd ..
       shell: cmd
       if: |
@@ -103,13 +107,10 @@ jobs:
 
     - name: Build Library (MSVC16)
       run: |
-        cd projects/VS2022
-        msbuild.exe raylib.sln /target:raylib /property:Configuration=Release /property:Platform=${{ matrix.ARCH }}
-        copy /Y .\build\raylib\bin\${{ matrix.VSARCHPATH }}\Release\raylib.lib .\..\..\build\${{ env.RELEASE_NAME }}\lib\raylib.lib
-        msbuild.exe raylib.sln /target:raylib /property:Configuration=Release.DLL /property:Platform=${{ matrix.ARCH }}
-        copy /Y .\build\raylib\bin\${{ matrix.VSARCHPATH }}\Release.DLL\raylib.dll .\..\..\build\${{ env.RELEASE_NAME }}\lib\raylib.dll
-        copy /Y .\build\raylib\bin\${{ matrix.VSARCHPATH }}\Release.DLL\raylib.lib .\..\..\build\${{ env.RELEASE_NAME }}\lib\raylibdll.lib
-        cd ../..
+        cd tmp
+        cmake -B .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}/lib" -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
+        cmake --build . --config $BUILD_TYPE
+        cd ..
       shell: cmd
       if: matrix.compiler == 'msvc16'
 

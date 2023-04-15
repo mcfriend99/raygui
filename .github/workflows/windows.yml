@@ -85,7 +85,7 @@ jobs:
     - name: Build Library (MinGW-w64 32bit)
       run: |
         cd tmp
-        cmake -B .. -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DCMAKE_C_FLAGS="-m32" -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}/lib" -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
+        cmake .. -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DCMAKE_C_FLAGS="-m32" -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}/lib" -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
         cmake --build . --config $BUILD_TYPE
         cd ..
       shell: cmd

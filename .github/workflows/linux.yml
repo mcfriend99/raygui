@@ -66,9 +66,11 @@ jobs:
           -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE=../build/lib/${{ env.RELEASE_NAME }} \
           -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE=../build/lib/${{ env.RELEASE_NAME }}
         cmake --build . --config $BUILD_TYPE
-        cd ..
         
-        ls -al ${{github.workspace}}/build/lib/${{ env.RELEASE_NAME }}
+        ls ../build
+        ls ../build/lib
+        
+        cd ..
     
     - name: Generate Artifacts
       run: |

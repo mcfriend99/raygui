@@ -46,6 +46,7 @@ jobs:
     # Generating static + shared library, note that i386 architecture is deprecated
     # Defining GL_SILENCE_DEPRECATION because OpenGL is deprecated on macOS
     - name: Build Library
+      working-directory: ${{github.workspace}}/build
       run: |
         clang --version
         
@@ -54,20 +55,20 @@ jobs:
         RAYLIB_VERSION=`ggrep -Po 'RAYLIB_VERSION\s*=\s\K(.*)' raylib/src/Makefile`
         
         # Generate make files
-        cmake -B ${{github.workspace}} -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop \
+        cmake -B $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop \
           -DGL_SILENCE_DEPRECATION=1
         
         # Build raylib x86_64 dynamic
         cmake -E env CFLAGS="-target x86_64-apple-macos10.12" \
           LDFLAGS="-target x86_64-apple-macos10.12" \
-          cmake --build ${{github.workspace}} --config $BUILD_TYPE
+          cmake --build . --config $BUILD_TYPE
         ls -al ${{github.workspace}}
         mv ${{github.workspace}}/libraygui.dylib /tmp/libraygui_x86_64.dylib
         
         # Build raylib arm64 dynamic
         cmake -E env CFLAGS="-target arm64-apple-macos11" \
           LDFLAGS="-target arm64-apple-macos11" \
-          cmake --build $GITHUB_WORKSPACE/tmp2 --config $BUILD_TYPE
+          cmake --build . --config $BUILD_TYPE
         ls -al ${{github.workspace}}
         mv ${{github.workspace}}/libraygui.dylib /tmp/libraygui_arm64.dylib
         

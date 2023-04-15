@@ -58,7 +58,7 @@ jobs:
         mkdir -p build/lib/${{ env.RELEASE_NAME }}
 
     - name: Build Library
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/tmp
       run: |
         cmake -E env CFLAGS="-fPIC -Wno-unused-result -Wno-stringop-overflow -Wno-alloc-size-larger-than" \
           cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop \
@@ -69,14 +69,14 @@ jobs:
         ls -al ${{github.workspace}}/build/lib/${{ env.RELEASE_NAME }}
     
     - name: Generate Artifacts
+      working-directory: ${{github.workspace}}/build
       run: |
-        cp -v ./raylib/src/raylib.h ./build/${{ env.RELEASE_NAME }}/include
-        cp -v ./raylib/src/raymath.h ./build/${{ env.RELEASE_NAME }}/include
-        cp -v ./raylib/src/rlgl.h ./build/${{ env.RELEASE_NAME }}/include
-        cp -v ./raylib/CHANGELOG ./build/${{ env.RELEASE_NAME }}/CHANGELOG
-        cp -v ./raylib/README.md ./build/${{ env.RELEASE_NAME }}/README.md
-        cp -v ./raylib/LICENSE ./build/${{ env.RELEASE_NAME }}/LICENSE
-        cd build
+        cp -v ../raylib/src/raylib.h ./${{ env.RELEASE_NAME }}/include
+        cp -v ../raylib/src/raymath.h ./${{ env.RELEASE_NAME }}/include
+        cp -v ../raylib/src/rlgl.h ./${{ env.RELEASE_NAME }}/include
+        cp -v ../raylib/CHANGELOG ./${{ env.RELEASE_NAME }}/CHANGELOG
+        cp -v ../raylib/README.md ./${{ env.RELEASE_NAME }}/README.md
+        cp -v ../raylib/LICENSE ./${{ env.RELEASE_NAME }}/LICENSE
         tar -czvf ${{ env.RELEASE_NAME }}.tar.gz ${{ env.RELEASE_NAME }}
         
     - name: Upload Artifacts

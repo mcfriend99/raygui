@@ -56,27 +56,26 @@ jobs:
         RAYLIB_VERSION=`ggrep -Po 'RAYLIB_VERSION\s*=\s\K(.*)' ../raylib/src/Makefile`
         
         # Generate make files
-        cmake -B $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop \
-          -DGL_SILENCE_DEPRECATION=1
+        cmake -B .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DGL_SILENCE_DEPRECATION=1
         
         # Build raylib x86_64 dynamic
         cmake -E env CFLAGS="-target x86_64-apple-macos10.12" \
           LDFLAGS="-target x86_64-apple-macos10.12" \
           cmake --build . --config $BUILD_TYPE
-        ls -al ${{github.workspace}}
-        mv ${{github.workspace}}/libraygui.dylib /tmp/libraygui_x86_64.dylib
+        ls -al .
+        mv ./libraygui.dylib /tmp/libraygui_x86_64.dylib
         
         # Build raylib arm64 dynamic
         cmake -E env CFLAGS="-target arm64-apple-macos11" \
           LDFLAGS="-target arm64-apple-macos11" \
           cmake --build . --config $BUILD_TYPE
-        ls -al ${{github.workspace}}
-        mv ${{github.workspace}}/libraygui.dylib /tmp/libraygui_arm64.dylib
+        ls -al .
+        mv ./libraygui.dylib /tmp/libraygui_arm64.dylib
         
         # Join x86_64 and arm64 dynamic
         lipo -create -output ${{github.workspace}}/build/lib/${{ env.RELEASE_NAME }}/libraygui.${RAYLIB_VERSION}.dylib /tmp/libraygui_x86_64.dylib /tmp/libraygui_arm64.dylib
-        #ln -sv libraygui.${RAYLIB_VERSION}.dylib  ./build/${{ env.RELEASE_NAME }}/lib/libraylibgui.dylib
-        #ln -sv libraygui.${RAYLIB_VERSION}.dylib  ./build/${{ env.RELEASE_NAME }}/lib/libraylibgui.${RAYLIB_API_VERSION}.dylib
+        #ln -sv libraygui.${RAYLIB_VERSION}.dylib  ./build/lib/${{ env.RELEASE_NAME }}/libraylibgui.dylib
+        #ln -sv libraygui.${RAYLIB_VERSION}.dylib  ./build/lib/${{ env.RELEASE_NAME }}/libraylibgui.${RAYLIB_API_VERSION}.dylib
   
     - name: Generate Artifacts
       run: |

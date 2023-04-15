@@ -54,7 +54,7 @@ jobs:
         sudo apt-get update -qq
         sudo apt-get install gcc-multilib
         sudo apt-get install -y --no-install-recommends libglfw3 libglfw3-dev libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev libxext-dev libxfixes-dev
-        mkdir -p build/${{ env.RELEASE_NAME }}/include
+        mkdir -p build/include
         mkdir -p build/lib/${{ matrix.ARCH_NAME }}
         mkdir -p tmp
 
@@ -63,8 +63,8 @@ jobs:
         cd tmp
         cmake -E env CFLAGS="-fPIC -Wno-unused-result -Wno-stringop-overflow -Wno-alloc-size-larger-than" \
           cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop \
-          -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE=../build/lib/${{ matrix.ARCH_NAME }} \
-          -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE=../build/lib/${{ matrix.ARCH_NAME }}
+          -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE=../build/${{ matrix.ARCH_NAME }}/lib \
+          -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE=../build/${{ matrix.ARCH_NAME }}/lib
         cmake --build . --config $BUILD_TYPE
         
         ls -al ../build
@@ -75,12 +75,12 @@ jobs:
     - name: Generate Artifacts
       run: |
         ls -al ./build/
-        cp -v ./raylib/src/raylib.h ./build/${{ env.RELEASE_NAME }}/include
-        cp -v ./raylib/src/raymath.h ./build/${{ env.RELEASE_NAME }}/include
-        cp -v ./raylib/src/rlgl.h ./build/${{ env.RELEASE_NAME }}/include
-        cp -v ./raylib/CHANGELOG ./build/${{ env.RELEASE_NAME }}/CHANGELOG
-        cp -v ./raylib/README.md ./build/${{ env.RELEASE_NAME }}/README.md
-        cp -v ./raylib/LICENSE ./build/${{ env.RELEASE_NAME }}/LICENSE
+        cp -v ./raylib/src/raylib.h ./build/${{ matrix.ARCH_NAME }}/include
+        cp -v ./raylib/src/raymath.h ./build/${{ matrix.ARCH_NAME }}/include
+        cp -v ./raylib/src/rlgl.h ./build/${{ matrix.ARCH_NAME }}/include
+        cp -v ./raylib/CHANGELOG ./build/${{ matrix.ARCH_NAME }}/CHANGELOG
+        cp -v ./raylib/README.md ./build/${{ matrix.ARCH_NAME }}/README.md
+        cp -v ./raylib/LICENSE ./build/${{ matrix.ARCH_NAME }}/LICENSE
         cd build
         tar -czvf ${{ env.RELEASE_NAME }}.tar.gz ${{ env.RELEASE_NAME }}
         

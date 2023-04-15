@@ -25,6 +25,10 @@ jobs:
         bits: [32, 64]
         include:
         - compiler: mingw-w64
+          bits: 32
+          ARCH: "i686"
+          WINDRES_ARCH: pe-i386
+        - compiler: mingw-w64
           bits: 64
           ARCH: "x86_64"
           WINDRES_ARCH: pe-x86-64
@@ -79,13 +83,25 @@ jobs:
         tag: 12.2.0-15.0.6-10.0.0-msvcrt-r3
       if: matrix.compiler == 'mingw-w64'
         
+    - name: Build Library (MinGW-w64 32bit)
+      run: |
+        cd tmp
+        windres.exe --version
+        windres.exe -i ..\raylib\src\raylib.dll.rc -o ..\raylib\src\raylib.dll.rc.data -O coff --target=${{ matrix.WINDRES_ARCH }}
+        cmake .. -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make -DCMAKE_C_FLAGS="-m32" -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
+        cmake --build . --config $BUILD_TYPE
+        cd ..
+      if: matrix.compiler == 'mingw-w64' && matrix.bits == '32'
+
     - name: Build Library (MinGW-w64 64bit)
       run: |
         cd tmp
+        windres.exe --version
+        windres.exe -i ..\raylib\src\raylib.dll.rc -o ..\raylib\src\raylib.dll.rc.data -O coff --target=${{ matrix.WINDRES_ARCH }}
         cmake .. -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
         cmake --build . --config $BUILD_TYPE
         cd ..
-      if: matrix.compiler == 'mingw-w64'
+      if: matrix.compiler == 'mingw-w64' && matrix.bits == '64'
 
     - name: Build Library (MSVC16)
       run: |

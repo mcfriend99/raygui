@@ -96,7 +96,6 @@ jobs:
     - name: Build Library (MinGW-w64 64bit)
       run: |
         cd tmp
-        windres.exe -i raylib.dll.rc -o raylib.dll.rc.data -O coff --target=${{ matrix.WINDRES_ARCH }}
         cmake -B .. -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}/lib" -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
         cmake --build . --config $BUILD_TYPE
         cd ..

@@ -7,6 +7,10 @@ cmake_policy(SET CMP0026 OLD)
 
 add_library(raygui SHARED raygui.c raygui.h)
 
+if(APPLE)
+  add_definitions(-DGL_SILENCE_DEPRECATION)
+endif()
+
 add_subdirectory(raylib)
 add_definitions(-DRAYGUI_IMPLEMENTATION)
 add_definitions(-DBUILD_LIBTYPE_SHARED)
@@ -18,6 +22,10 @@ add_dependencies(raygui raylib)
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   message(STATUS "Building with -fPIC support")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Wno-unused-result -Wno-stringop-overflow -Wno-alloc-size-larger-than")
+  if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
+    # it's 32 bits
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
+  endif()
 #  target_compile_options(raygui PRIVATE -fPIC -Wno-unused-result -Wno-stringop-overflow -Wno-alloc-size-larger-than)
 endif()
 

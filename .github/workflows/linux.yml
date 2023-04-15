@@ -50,31 +50,16 @@ jobs:
         sudo apt-get update -qq
         sudo apt-get install gcc-multilib
         sudo apt-get install -y --no-install-recommends libglfw3 libglfw3-dev libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev libxext-dev libxfixes-dev
-        mkdir build
-        cd build
-        mkdir ${{ env.RELEASE_NAME }}
-        cd ${{ env.RELEASE_NAME }}
-        mkdir include
-        mkdir lib
-        cd ../../../raylib
-        # ${{ matrix.ARCH }}-linux-gnu-gcc -v
-      
+        mkdir -p build/${{ env.RELEASE_NAME }}/include
+        mkdir -p build/${{ env.RELEASE_NAME }}/32/lib
+        mkdir -p build/${{ env.RELEASE_NAME }}/64/lib
+
     # TODO: Support 32bit (i386) static/shared library building
     - name: Build Library
+      working-directory: ${{github.workspace}}/build
       run: |
-        cd src
-        make PLATFORM=PLATFORM_DESKTOP CC=gcc RAYLIB_LIBTYPE=STATIC RAYLIB_RELEASE_PATH="../build/${{ env.RELEASE_NAME }}/lib" CUSTOM_CFLAGS="-m32" -B
-        # make PLATFORM=PLATFORM_DESKTOP CC=gcc RAYLIB_LIBTYPE=SHARED RAYLIB_RELEASE_PATH="../build/${{ env.RELEASE_NAME }}/lib" -B
-        cd ..
-      if: matrix.bits == 32
-
-    - name: Build Library
-      run: |
-        cd src
-        make PLATFORM=PLATFORM_DESKTOP CC=gcc RAYLIB_LIBTYPE=STATIC RAYLIB_RELEASE_PATH="../build/${{ env.RELEASE_NAME }}/lib" -B
-        make PLATFORM=PLATFORM_DESKTOP CC=gcc RAYLIB_LIBTYPE=SHARED RAYLIB_RELEASE_PATH="../build/${{ env.RELEASE_NAME }}/lib" -B
-        cd ..
-      if: matrix.bits == 64
+        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${{github.workspace}}/build/${{ env.RELEASE_NAME }}/${{ matrix.bits }}/lib
+        cmake --build . --config $BUILD_TYPE
     
     - name: Generate Artifacts
       run: |

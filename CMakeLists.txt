@@ -15,5 +15,9 @@ add_definitions(-DBUILD_SHARED_LIBS)
 target_include_directories(raygui PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/raylib/src")
 add_dependencies(raygui raylib)
 
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+  target_compile_options(raygui PRIVATE -fPIC -Wno-unused-result -Wno-stringop-overflow -Wno-alloc-size-larger-than)
+endif()
+
 get_target_property(RAYLIB_STATIC_LIB raylib LOCATION)
 target_link_libraries(raygui raylib)

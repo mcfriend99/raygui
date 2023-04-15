@@ -53,9 +53,6 @@ jobs:
         RAYLIB_API_VERSION=`ggrep -Po 'RAYLIB_API_VERSION\s*=\s\K(.*)' raylib/src/Makefile`
         RAYLIB_VERSION=`ggrep -Po 'RAYLIB_VERSION\s*=\s\K(.*)' raylib/src/Makefile`
         
-        CFLAGS="-target x86_64-apple-macos10.12 -DGL_SILENCE_DEPRECATION"
-        LDFLAGS="-target x86_64-apple-macos10.12"
-        
         # Build raylib x86_64 dynamic
         mkdir -p $GITHUB_WORKSPACE/tmp
         cmake -E env CFLAGS="-target x86_64-apple-macos10.12" \
@@ -65,6 +62,8 @@ jobs:
           -DGL_SILENCE_DEPRECATION=1
         cmake --build $GITHUB_WORKSPACE/tmp --config $BUILD_TYPE
         rm -rf $GITHUB_WORKSPACE/tmp
+        
+        ls -al ${{github.workspace}}/x86_64/lib
         
         # Build raylib arm64 dynamic
         mkdir -p $GITHUB_WORKSPACE/tmp
@@ -76,7 +75,6 @@ jobs:
         cmake --build $GITHUB_WORKSPACE/tmp --config $BUILD_TYPE
         rm -rf $GITHUB_WORKSPACE/tmp
         
-        ls -al ${{github.workspace}}/x86_64/lib
         ls -al ${{github.workspace}}/arm64/lib
         
         # Join x86_64 and arm64 dynamic

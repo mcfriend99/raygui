@@ -98,6 +98,7 @@ jobs:
         cmake --build .
         cd ..
       if: matrix.compiler == 'msvc16'
+      shell: cmd
 
     - name: Generate Artifacts
       run: |

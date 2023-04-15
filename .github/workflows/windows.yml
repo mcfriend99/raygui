@@ -84,7 +84,7 @@ jobs:
         cd tmp
         windres.exe --version
         windres.exe -i ..\raylib\src\raylib.dll.rc -o ..\raylib\src\raylib.dll.rc.data -O coff --target=${{ matrix.WINDRES_ARCH }}
-        cmake .. -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
+        cmake .. -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make -DPLATFORM=Desktop -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="..\build\${{ env.RELEASE_NAME }}\lib"
         cmake --build .
         cd ..
       if: matrix.compiler == 'mingw-w64'
@@ -94,7 +94,7 @@ jobs:
         cd tmp
         windres.exe --version
         windres.exe -i ..\raylib\src\raylib.dll.rc -o ..\raylib\src\raylib.dll.rc.data -O coff --target=${{ matrix.WINDRES_ARCH }}
-        cmake .. -DPLATFORM=Desktop -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE="..\build\${{ env.RELEASE_NAME }}\lib"
+        cmake .. -DPLATFORM=Desktop -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="..\build\${{ env.RELEASE_NAME }}\lib"
         cmake --build .
         cd ..
       if: matrix.compiler == 'msvc16'
